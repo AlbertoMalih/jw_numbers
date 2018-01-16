@@ -27,6 +27,8 @@ class CitiesActivity : AppCompatActivity() {
         startActivity(Intent(this, StreetActivity::class.java).putExtras(bundles))
     }
 
+    //todo add exit from db
+
 }
 
 

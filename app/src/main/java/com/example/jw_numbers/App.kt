@@ -1,7 +1,9 @@
 package com.example.jw_numbers
 
 import android.app.Application
+import com.example.jw_numbers.dagger.AppComponent
 import com.example.jw_numbers.dagger.*
+
 
 class App : Application() {
     companion object {

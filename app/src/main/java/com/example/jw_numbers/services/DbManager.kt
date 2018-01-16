@@ -1,6 +1,5 @@
 package com.example.jw_numbers.services
 
-
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -10,10 +9,7 @@ import android.util.Log
 import com.example.jw_numbers.OnGetUsersListener
 import com.example.jw_numbers.model.NumberDTO
 import com.example.jw_numbers.viewmodel.NumbersViewModel
-import java.sql.SQLException
 import java.util.*
-import android.database.DatabaseUtils
-
 
 val TABLE_NAME = "numbers"
 private val COLUMN_ID = "_id"
@@ -21,15 +17,13 @@ private val COLUMN_ID = "_id"
 private val COLUMN_DESCRIPTION = "description"
 private val COLUMN_NUMBER = "number"
 private val COLUMN_PLACE = "place"
-private val COLUMN_FIREBASE_ID = "firebaseId"
 
 class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", null, 1) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
                 "create table " + TABLE_NAME + " " +
                         "(" + COLUMN_ID + " integer primary key, " + COLUMN_DESCRIPTION +
-                        " text, " + COLUMN_PLACE + " text," + COLUMN_NUMBER + " text, " +
-                        COLUMN_FIREBASE_ID + " text )"
+                        " text, " + COLUMN_PLACE + " text," + COLUMN_NUMBER + " text" + " )"
         )
     }
 
@@ -41,20 +35,15 @@ class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", nu
     fun insertAllNumbers(numbers: List<NumberDTO>) {
         val db = this.writableDatabase
         for (number in numbers) {
-            Log.d("tag", "insertAllNumbers, number: " + number)
             val contentValues = ContentValues()
             contentValues.put(COLUMN_PLACE, number.place)
             contentValues.put(COLUMN_NUMBER, number.number)
-//            db.insert(TABLE_NAME, null, contentValues)
 
-            if (1 > db.update(TABLE_NAME, contentValues, COLUMN_FIREBASE_ID + " = ?", arrayOf(number.firebaseId))) {
-                contentValues.put(COLUMN_FIREBASE_ID, number.firebaseId)
+            if (1 > db.update(TABLE_NAME, contentValues, COLUMN_NUMBER + " = ?", arrayOf(number.number))) {
                 contentValues.put(COLUMN_DESCRIPTION, number.description)
-                val tt = db.insert(TABLE_NAME, null, contentValues)
-                Log.d("tag", "count insert: " + tt)
+                db.insert(TABLE_NAME, null, contentValues)
             }
         }
-        Log.d("tag", "insertAllNumbers, db: " + DatabaseUtils.queryNumEntries(db, TABLE_NAME))
         db.close()
     }
 
@@ -62,7 +51,7 @@ class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", nu
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COLUMN_DESCRIPTION, number.description)
-        db.update(TABLE_NAME, contentValues, COLUMN_FIREBASE_ID + " = ?", arrayOf(number.firebaseId))
+        db.update(TABLE_NAME, contentValues, COLUMN_NUMBER + " = ?", arrayOf(number.number))
         db.close()
     }
 
@@ -81,12 +70,10 @@ private class RequestAllNumbers(val viewModel: NumbersViewModel, val listener: O
         val descriptionIndex = allData.getColumnIndex(COLUMN_DESCRIPTION)
         val numberIndex = allData.getColumnIndex(COLUMN_NUMBER)
         val placeIndex = allData.getColumnIndex(COLUMN_PLACE)
-        val idIndex = allData.getColumnIndex(COLUMN_FIREBASE_ID)
 
         while (allData.moveToNext()) {
-            val currentNumber = NumberDTO(allData.getString(descriptionIndex), allData.getString(numberIndex), allData.getString(placeIndex), allData.getString(idIndex))
+            val currentNumber = NumberDTO(allData.getString(descriptionIndex), allData.getString(numberIndex), allData.getString(placeIndex))
             val places = currentNumber.place.split("//")
-            Log.d("tag", "currentNumber, place: " + currentNumber.place)
             if (!data.containsKey(places[0])) {
                 data.put(places[0], HashMap())
             }
@@ -103,8 +90,6 @@ private class RequestAllNumbers(val viewModel: NumbersViewModel, val listener: O
         super.onPostExecute(result)
         writableDatabase.close()
         viewModel.data = result
-        Log.d("tag", "viewModel.data: " + viewModel.data)
         listener.onGetUsers()
-
     }
 }

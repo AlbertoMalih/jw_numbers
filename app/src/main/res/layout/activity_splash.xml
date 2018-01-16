@@ -6,13 +6,25 @@
     android:layout_height="match_parent"
     tools:context="com.example.jw_numbers.SplashActivity">
 
-    <TextView
+    <EditText
+        android:id="@+id/getterStoreId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LOADING NUMBERS!"
+        android:hint="Введи ид хранилища номеров"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/startGetDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="начать поиск"
+        app:layout_constraintEnd_toEndOf="@id/getterStoreId"
+        app:layout_constraintStart_toStartOf="@id/getterStoreId"
+        app:layout_constraintTop_toBottomOf="@id/getterStoreId" />
+
 
 </android.support.constraint.ConstraintLayout>
