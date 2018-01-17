@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
-import android.util.Log
 import com.example.jw_numbers.OnGetUsersListener
 import com.example.jw_numbers.model.NumberDTO
 import com.example.jw_numbers.viewmodel.NumbersViewModel
@@ -32,17 +31,31 @@ class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", nu
         onCreate(db)
     }
 
+    fun deleteAllNotes() {
+        val db = this.writableDatabase
+        db.delete(TABLE_NAME, null, null)
+        db.close()
+    }
+
     fun insertAllNumbers(numbers: List<NumberDTO>) {
         val db = this.writableDatabase
-        for (number in numbers) {
-            val contentValues = ContentValues()
-            contentValues.put(COLUMN_PLACE, number.place)
-            contentValues.put(COLUMN_NUMBER, number.number)
+        db.beginTransaction()
+        try {
+            for (number in numbers) {
+                val contentValues = ContentValues()
+                contentValues.put(COLUMN_PLACE, number.place)
+                contentValues.put(COLUMN_NUMBER, number.number)
 
-            if (1 > db.update(TABLE_NAME, contentValues, COLUMN_NUMBER + " = ?", arrayOf(number.number))) {
-                contentValues.put(COLUMN_DESCRIPTION, number.description)
-                db.insert(TABLE_NAME, null, contentValues)
+                if (1 > db.update(TABLE_NAME, contentValues, COLUMN_NUMBER + " = ?", arrayOf(number.number))) {
+                    contentValues.put(COLUMN_DESCRIPTION, number.description)
+                    db.insert(TABLE_NAME, null, contentValues)
+                }
             }
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.endTransaction()
         }
         db.close()
     }
