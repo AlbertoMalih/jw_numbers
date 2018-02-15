@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
+import android.preference.PreferenceManager
 import com.example.jw_numbers.OnGetUsersListener
 import com.example.jw_numbers.model.NumberDTO
 import com.example.jw_numbers.viewmodel.NumbersViewModel
@@ -16,13 +17,22 @@ private val COLUMN_ID = "_id"
 private val COLUMN_DESCRIPTION = "description"
 private val COLUMN_NUMBER = "number"
 private val COLUMN_PLACE = "place"
+private val COLUMN_STORE_ID = "store_id"
 
 class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", null, 1) {
+    var storeId: String = ""
+
+    init {
+        restartStoreId(context)
+    }
+
+
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
                 "create table " + TABLE_NAME + " " +
                         "(" + COLUMN_ID + " integer primary key, " + COLUMN_DESCRIPTION +
-                        " text, " + COLUMN_PLACE + " text," + COLUMN_NUMBER + " text" + " )"
+                        " text, " + COLUMN_PLACE + " text, " + COLUMN_NUMBER + " text, " +
+                        COLUMN_STORE_ID + " text" + " )"
         )
     }
 
@@ -45,8 +55,10 @@ class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", nu
                 val contentValues = ContentValues()
                 contentValues.put(COLUMN_PLACE, number.place)
                 contentValues.put(COLUMN_NUMBER, number.number)
+                contentValues.put(COLUMN_STORE_ID, storeId)
 
-                if (1 > db.update(TABLE_NAME, contentValues, COLUMN_NUMBER + " = ?", arrayOf(number.number))) {
+                if (1 > db.update(TABLE_NAME, contentValues, "$COLUMN_NUMBER = ? AND $COLUMN_STORE_ID = ?",
+                                arrayOf(number.number, storeId))) {
                     contentValues.put(COLUMN_DESCRIPTION, number.description)
                     db.insert(TABLE_NAME, null, contentValues)
                 }
@@ -64,34 +76,41 @@ class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", nu
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COLUMN_DESCRIPTION, number.description)
-        db.update(TABLE_NAME, contentValues, COLUMN_NUMBER + " = ?", arrayOf(number.number))
+        db.update(TABLE_NAME, contentValues, "$COLUMN_NUMBER = ? AND $COLUMN_STORE_ID = ?",
+                arrayOf(number.number, storeId))
         db.close()
     }
 
     fun installAllNotesInListener(viewModel: NumbersViewModel, listener: OnGetUsersListener) {
-        RequestAllNumbers(viewModel, listener, writableDatabase).execute()
+        RequestAllNumbers(viewModel, listener, writableDatabase, storeId).execute()
+    }
+
+    fun restartStoreId(context: Context) {
+        storeId = PreferenceManager.getDefaultSharedPreferences(context).getString("StoreId", "")
     }
 }
 
-private class RequestAllNumbers(val viewModel: NumbersViewModel, val listener: OnGetUsersListener, val writableDatabase: SQLiteDatabase) :
+private class RequestAllNumbers(val viewModel: NumbersViewModel, val listener: OnGetUsersListener, val writableDatabase: SQLiteDatabase, val storeId: String) :
         AsyncTask<Void, Void, MutableMap<String, MutableMap<String, ArrayList<NumberDTO>>>>() {
 
     override fun doInBackground(vararg p0: Void?): MutableMap<String, MutableMap<String, ArrayList<NumberDTO>>> {
         val data = HashMap<String, MutableMap<String, ArrayList<NumberDTO>>>()
-        val allData = writableDatabase.query(TABLE_NAME, null, null, null, null, null, COLUMN_PLACE)
+        val allData = writableDatabase.query(TABLE_NAME, null, COLUMN_STORE_ID + " = ?", arrayOf(storeId), null, null, COLUMN_PLACE)
 
         val descriptionIndex = allData.getColumnIndex(COLUMN_DESCRIPTION)
         val numberIndex = allData.getColumnIndex(COLUMN_NUMBER)
         val placeIndex = allData.getColumnIndex(COLUMN_PLACE)
+        val storeIdIndex = allData.getColumnIndex(COLUMN_STORE_ID)
 
         while (allData.moveToNext()) {
-            val currentNumber = NumberDTO(allData.getString(descriptionIndex), allData.getString(numberIndex), allData.getString(placeIndex))
+            val currentNumber = NumberDTO(allData.getString(descriptionIndex), allData.getString(numberIndex),
+                    allData.getString(placeIndex), allData.getString(storeIdIndex))
             val places = currentNumber.place.split("//")
             if (!data.containsKey(places[0])) {
-                data.put(places[0], HashMap())
+                data[places[0]] = HashMap()
             }
             if (!data[places[0]]!!.containsKey(places[1])) {
-                data[places[0]]!!.put(places[1], ArrayList())
+                data[places[0]]!![places[1]] = ArrayList()
             }
             data[places[0]]!![places[1]]!!.add(currentNumber)
         }
