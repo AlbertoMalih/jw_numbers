@@ -6,13 +6,16 @@ import android.widget.Toast
 import com.example.jw_numbers.OnGetUsersListener
 import com.example.jw_numbers.R
 import com.example.jw_numbers.SplashActivity
+import com.example.jw_numbers.model.CityDTO
 import com.example.jw_numbers.model.NumberDTO
 import com.example.jw_numbers.services.DbManager
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class NumbersViewModel(val dbManager: DbManager, val context: Context) {
-    var data: MutableMap<String, MutableMap<String, ArrayList<NumberDTO>>> = HashMap()
-    var currentList: ArrayList<NumberDTO>? = null
+    var data: ArrayList<CityDTO> = ArrayList()
+    lateinit var currentCity: CityDTO
+    var citiesNames = ArrayList<String>()
 
     fun installAllUsers(listener: OnGetUsersListener, storeId: String) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString("StoreId", storeId).apply()
@@ -26,10 +29,13 @@ class NumbersViewModel(val dbManager: DbManager, val context: Context) {
                             return@addOnSuccessListener
                         }
                         dbManager.restartStoreId(context)
-                        dbManager.insertAllNumbers(
+                        dbManager.insertAllNumbers(/*todo refactore reate users in dbManager in background*/
                                 task.data.filter { it.value is Map<*, *> && it.key != "notValidObject" }
                                         .mapTo(ArrayList()) {
-                                            NumberDTO(number = it.key, place = (it.value as Map<*, *>)["place"] as String)
+                                            NumberDTO(number = it.key,
+                                                    place = (it.value as Map<*, *>)["place"] as String,
+                                                    name = (it.value as Map<*, *>)["name"] as String,
+                                                    currentStoreId = storeId)
                                         }
                         )
                         dbManager.installAllNotesInListener(this, listener)

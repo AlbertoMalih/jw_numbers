@@ -3,7 +3,6 @@ package com.example.jw_numbers
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.*
@@ -14,17 +13,18 @@ import kotlinx.android.synthetic.main.activity_cities.*
 import javax.inject.Inject
 
 class CitiesActivity : AppCompatActivity() {
-    @Inject lateinit var viewModel: NumbersViewModel
+    @Inject
+    lateinit var viewModel: NumbersViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.component.inject(this)
         setContentView(R.layout.activity_cities)
-        allCities.adapter = CitiesAdapter(viewModel, viewModel.data.keys.toList(), this)
     }
 
-    fun startStreetActivity(bundles: Bundle) {
-        startActivity(Intent(this, StreetActivity::class.java).putExtras(bundles))
+    override fun onResume() {
+        super.onResume()
+        allCities.adapter = CitiesAdapter(viewModel, viewModel.citiesNames, this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -58,21 +58,13 @@ class CitiesAdapter(val viewModel: NumbersViewModel, val cities: List<String>, v
     override fun getItemCount() = cities.size
 
     inner class CityViewHolder(view: View, activity: CitiesActivity) : RecyclerView.ViewHolder(view) {
-        var name = view.findViewById<TextView>(R.id.nameCity)!!
+        var name = view.findViewById<TextView>(R.id.nameCity)
 
         init {
             view.setOnClickListener({ _ ->
                 if (adapterPosition != RecyclerView.NO_POSITION) {
-                    AlertDialog.Builder(activity).setTitle("Выбери улицу")
-                            .setItems(viewModel.data[cities[adapterPosition]]?.keys?.toTypedArray(),
-                                    { dialog, item ->
-                                        val currentStreet = viewModel.data[cities[adapterPosition]]?.entries?.toTypedArray()!![item]
-                                        val bundles = Bundle()
-                                        bundles.putSerializable("numberHome", currentStreet.key)
-                                        viewModel.currentList = currentStreet.value
-                                        dialog.dismiss()
-                                        activity.startStreetActivity(bundles)
-                                    }).show()
+                    viewModel.currentCity = viewModel.data[adapterPosition]
+                    activity.startActivity(Intent(activity, CurrentCityActivity::class.java))
                 }
             })
         }

@@ -14,20 +14,21 @@ import com.example.jw_numbers.viewmodel.NumbersViewModel
 import kotlinx.android.synthetic.main.activity_street.*
 import javax.inject.Inject
 
-class StreetActivity : AppCompatActivity() {
-    @Inject lateinit var viewModel: NumbersViewModel
+class CurrentCityActivity : AppCompatActivity() {
+    @Inject
+    lateinit var viewModel: NumbersViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_street)
         App.component.inject(this)
-        title = intent.extras.getString("name") ?: ""
-        allHomes.adapter = HomesAdapter(viewModel, viewModel.currentList ?: arrayListOf(), this)
+        title = viewModel.currentCity.name
+        allHomes.adapter = HomesAdapter(viewModel, viewModel.currentCity.numbers, this)
     }
 }
 
 
-private class HomesAdapter(val viewModel: NumbersViewModel, val homes: List<NumberDTO>, val activity: StreetActivity) : RecyclerView.Adapter<HomesAdapter.HomesViewHolder>() {
+private class HomesAdapter(val viewModel: NumbersViewModel, val homes: List<NumberDTO>, val activity: CurrentCityActivity) : RecyclerView.Adapter<HomesAdapter.HomesViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HomesViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.home_item, parent, false), activity)
 
@@ -35,13 +36,16 @@ private class HomesAdapter(val viewModel: NumbersViewModel, val homes: List<Numb
     override fun onBindViewHolder(holder: HomesViewHolder, position: Int) {
         val currentHome = homes[position]
         holder.numberHome.text = currentHome.number
-        holder.placeHome.text = currentHome.place.split("//").last()
-        holder.descriptionHome.text = if (currentHome.description.length <= 25) currentHome.description else currentHome.description.substring(0, 25) + "..."
+        holder.placeHome.text = currentHome.name
+        if (currentHome.description.isNotEmpty()) {
+            holder.descriptionHome.text = if (currentHome.description.length <= 25) currentHome.description else currentHome.description.substring(0, 25) + "..."
+            holder.descriptionHome.visibility = View.VISIBLE
+        }
     }
 
     override fun getItemCount() = homes.size
 
-    inner class HomesViewHolder(view: View, val activity: StreetActivity) : RecyclerView.ViewHolder(view) {
+    inner class HomesViewHolder(view: View, val activity: CurrentCityActivity) : RecyclerView.ViewHolder(view) {
         var numberHome = view.findViewById<TextView>(R.id.numberHome)
         var placeHome = view.findViewById<TextView>(R.id.placeHome)
         var descriptionHome = view.findViewById<TextView>(R.id.descriptionHome)
@@ -54,6 +58,8 @@ private class HomesAdapter(val viewModel: NumbersViewModel, val homes: List<Numb
                     view.setText(currentHome.description)
                     AlertDialog.Builder(activity).setView(view).setPositiveButton("изменить", { interfaceDialog, _ ->
                         currentHome.description = view.text.toString()
+                        descriptionHome.paddingLeft.and(20)
+                        descriptionHome.paddingRight.and(20)
                         descriptionHome.text = if (view.text.toString().length <= 25) view.text.toString() else view.text.toString().substring(0, 25) + "..."
                         viewModel.dbManager.setDescriptionOfNumber(currentHome)
                     }).create().show()
