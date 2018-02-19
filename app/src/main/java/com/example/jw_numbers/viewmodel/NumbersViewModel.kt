@@ -30,14 +30,13 @@ class NumbersViewModel(val dbManager: DbManager, val context: Context) {
                         }
                         dbManager.restartStoreId(context)
                         dbManager.insertAllNumbers(/*todo refactore reate users in dbManager in background*/
-                                task.data.filter { it.value is Map<*, *> && it.key != "notValidObject" }
+                                task.data.filter { it.value is Map<*, *> && it.key is String && it.key != "notValidObject" }
                                         .mapTo(ArrayList()) {
                                             NumberDTO(number = it.key,
                                                     place = (it.value as Map<*, *>)["place"] as String,
                                                     name = (it.value as Map<*, *>)["name"] as String,
                                                     currentStoreId = storeId)
-                                        }
-                        )
+                                        })
                         dbManager.installAllNotesInListener(this, listener)
                     }
         } else

@@ -57,6 +57,8 @@ private class HomesAdapter(val viewModel: NumbersViewModel, val homes: List<Numb
                     val view = EditText(activity)
                     view.setText(currentHome.description)
                     AlertDialog.Builder(activity).setView(view).setPositiveButton("изменить", { interfaceDialog, _ ->
+                        if (view.text.isNotEmpty()) descriptionHome.visibility = View.VISIBLE
+                        else descriptionHome.visibility = View.GONE
                         currentHome.description = view.text.toString()
                         descriptionHome.paddingLeft.and(20)
                         descriptionHome.paddingRight.and(20)
