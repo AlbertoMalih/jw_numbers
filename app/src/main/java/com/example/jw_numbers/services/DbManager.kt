@@ -6,24 +6,23 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
 import android.preference.PreferenceManager
-import android.util.Log
+import android.support.annotation.Nullable
 import com.example.jw_numbers.OnGetUsersListener
 import com.example.jw_numbers.model.CityDTO
 import com.example.jw_numbers.model.NumberDTO
 import com.example.jw_numbers.viewmodel.NumbersViewModel
-import java.util.*
 
-val TABLE_NAME = "numbers"
-private val COLUMN_ID = "_id"
+const val TABLE_NAME = "numbers"
+private const val COLUMN_ID = "_id"
 
-private val COLUMN_DESCRIPTION = "description"
-private val COLUMN_NUMBER = "number"
-private val COLUMN_NAME = "name"
-private val COLUMN_PLACE = "place"
-private val COLUMN_STORE_ID = "store_id"
+private const val COLUMN_DESCRIPTION = "description"
+private const val COLUMN_NUMBER = "number"
+private const val COLUMN_NAME = "name"
+private const val COLUMN_PLACE = "place"
+private const val COLUMN_STORE_ID = "store_id"
 
 class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", null, 1) {
-    var storeId: String = ""
+    private var storeId: String = ""
 
     init {
         restartStoreId(context)
@@ -44,14 +43,7 @@ class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", nu
         onCreate(db)
     }
 
-    fun deleteAllNotes() {
-        val db = this.writableDatabase
-        db.delete(TABLE_NAME, null, null)
-        db.close()
-    }
-
     fun insertAllNumbers(numbers: List<NumberDTO>) {
-        Log.d("tag", "count users: " + numbers[0])
         val db = this.writableDatabase
         db.beginTransaction()
         try {
@@ -86,8 +78,8 @@ class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", nu
         db.close()
     }
 
-    fun installAllNotesInListener(viewModel: NumbersViewModel, listener: OnGetUsersListener) {
-        RequestAllNumbers(viewModel, listener, writableDatabase, storeId).execute()
+    fun installAllNotes(viewModel: NumbersViewModel, listener: OnGetUsersListener, dataForInstallToDb: Map<String, *>?) {
+        RequestAllNumbers(viewModel, this, listener, storeId, dataForInstallToDb).execute()
     }
 
     fun restartStoreId(context: Context) {
@@ -95,32 +87,37 @@ class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", nu
     }
 }
 
-private class RequestAllNumbers(val viewModel: NumbersViewModel, val listener: OnGetUsersListener, val writableDatabase: SQLiteDatabase, val storeId: String) :
-        AsyncTask<Void, Void, ArrayList<CityDTO>>() {
+private class RequestAllNumbers(val viewModel: NumbersViewModel, val dbManager: DbManager, val listener: OnGetUsersListener,
+                                val storeId: String, @Nullable val dataForInstallToDb: Map<String, *>?) : AsyncTask<Void, Void, ArrayList<CityDTO>>() {
 
     override fun doInBackground(vararg p0: Void?): ArrayList<CityDTO> {
         val data = ArrayList<CityDTO>()
-        val allData = writableDatabase.query(TABLE_NAME, null, COLUMN_STORE_ID + " = ?", arrayOf(storeId), null, null, COLUMN_PLACE)
-
+        dataForInstallToDb?.let {
+            dbManager.insertAllNumbers(it.filter { itInFilter -> itInFilter.value is Map<*, *> && itInFilter.key != "notValidObject" }
+                    .mapTo(ArrayList()) { currentNumberData ->
+                        NumberDTO(number = currentNumberData.key,
+                                place = (currentNumberData.value as Map<*, *>)["place"] as String,
+                                name = (currentNumberData.value as Map<*, *>)["name"] as String,
+                                currentStoreId = storeId)
+                    })
+        }
+        val allData = dbManager.writableDatabase.query(TABLE_NAME, null, COLUMN_STORE_ID + " = ?", arrayOf(storeId), null, null, COLUMN_PLACE)
         val descriptionIndex = allData.getColumnIndex(COLUMN_DESCRIPTION)
         val numberIndex = allData.getColumnIndex(COLUMN_NUMBER)
         val placeIndex = allData.getColumnIndex(COLUMN_PLACE)
         val nameIndex = allData.getColumnIndex(COLUMN_NAME)
         val storeIdIndex = allData.getColumnIndex(COLUMN_STORE_ID)
 
-        toNextCity@ while (allData.moveToNext()) {
+        while (allData.moveToNext()) {
             val currentNumber = NumberDTO(allData.getString(descriptionIndex), allData.getString(numberIndex),
                     allData.getString(placeIndex), allData.getString(nameIndex), allData.getString(storeIdIndex))
-            for (currentCity in data) {
-                if (currentCity.name == currentNumber.place) {
-                    currentCity.numbers.add(currentNumber)
-                    continue@toNextCity
-                }
-            }
-            data.add(CityDTO(numbers = arrayListOf(currentNumber), name = currentNumber.place))
+            if (!viewModel.citiesNames.contains(currentNumber.place)) {
+                viewModel.citiesNames.add(currentNumber.place)
+                data.add(CityDTO(numbers = arrayListOf(currentNumber), name = currentNumber.place))
+            } else data.first { it.name == currentNumber.place }.numbers.add(currentNumber)
         }
-
         allData.close()
+        dbManager.writableDatabase.close()
         data.sortBy { it.name }
         data.forEach { itCity -> itCity.numbers.sortBy { itNumber -> itNumber.number } }
         return data
@@ -128,9 +125,7 @@ private class RequestAllNumbers(val viewModel: NumbersViewModel, val listener: O
 
     override fun onPostExecute(result: ArrayList<CityDTO>) {
         super.onPostExecute(result)
-        writableDatabase.close()
         viewModel.data = result
-        viewModel.data.forEach { if (!viewModel.citiesNames.contains(it.name)) viewModel.citiesNames.add(it.name) }
         listener.onGetUsers()
     }
 }

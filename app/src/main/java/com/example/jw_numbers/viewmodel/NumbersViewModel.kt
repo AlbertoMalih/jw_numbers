@@ -7,7 +7,6 @@ import com.example.jw_numbers.OnGetUsersListener
 import com.example.jw_numbers.R
 import com.example.jw_numbers.SplashActivity
 import com.example.jw_numbers.model.CityDTO
-import com.example.jw_numbers.model.NumberDTO
 import com.example.jw_numbers.services.DbManager
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -29,18 +28,10 @@ class NumbersViewModel(val dbManager: DbManager, val context: Context) {
                             return@addOnSuccessListener
                         }
                         dbManager.restartStoreId(context)
-                        dbManager.insertAllNumbers(/*todo refactore reate users in dbManager in background*/
-                                task.data.filter { it.value is Map<*, *> && it.key is String && it.key != "notValidObject" }
-                                        .mapTo(ArrayList()) {
-                                            NumberDTO(number = it.key,
-                                                    place = (it.value as Map<*, *>)["place"] as String,
-                                                    name = (it.value as Map<*, *>)["name"] as String,
-                                                    currentStoreId = storeId)
-                                        })
-                        dbManager.installAllNotesInListener(this, listener)
+                        dbManager.installAllNotes(this, listener, task.data)
                     }
         } else
-            dbManager.installAllNotesInListener(this, listener)
+            dbManager.installAllNotes(this, listener, null)
     }
 
     private fun isOnline(): Boolean {
