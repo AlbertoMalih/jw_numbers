@@ -1,24 +1,16 @@
 package com.example.jw_numbers
 
-import android.app.Application
-import com.example.jw_numbers.dagger.AppComponent
-import com.example.jw_numbers.dagger.*
+import android.support.multidex.MultiDexApplication
+import com.yanevskyy.y.bythewayanalitics.di.jw_numbersModules
+import io.realm.Realm
+import org.koin.android.ext.android.startKoin
 
 
-class App : Application() {
-    companion object {
-        lateinit var INSTANCE: App
-        lateinit var component: AppComponent
-    }
-
+class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        INSTANCE = this
-        component = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
+        Realm.init(this)
+        startKoin(this, jw_numbersModules)
     }
-
-    fun appComponent(): AppComponent = component
 }

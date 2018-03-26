@@ -28,8 +28,8 @@ android {
     }
 }
 
-kapt {
-    generateStubs = true
+ext {
+    koin_version = '0.9.1'
 }
 
 dependencies {
@@ -44,12 +44,21 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-firestore:11.4.2'
 
-    implementation 'com.google.dagger:dagger:2.9'
-    kapt 'com.google.dagger:dagger-compiler:2.9'
+    implementation "android.arch.lifecycle:extensions:1.1.0"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
+    implementation "android.arch.lifecycle:common-java8:1.1.0"
+
+    implementation "org.koin:koin-android-architecture:$koin_version"
+    implementation "org.koin:koin-android:$koin_version"
+    testCompile "org.koin:koin-test:$koin_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
+
+kapt {
+    generateStubs = true
 }
 
 realm {
