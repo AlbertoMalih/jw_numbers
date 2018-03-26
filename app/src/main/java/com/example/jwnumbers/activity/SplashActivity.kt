@@ -1,4 +1,4 @@
-package com.example.jw_numbers.activity
+package com.example.jwnumbers.activity
 
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.example.jw_numbers.R
-import com.example.jw_numbers.services.OnReceivedNumbers
-import com.example.jw_numbers.viewmodel.SplashViewModel
+import com.example.jwnumbers.R
+import com.example.jwnumbers.services.OnReceivedNumbers
+import com.example.jwnumbers.viewmodel.SplashViewModel
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.koin.android.architecture.ext.viewModel
 

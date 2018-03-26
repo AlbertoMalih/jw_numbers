@@ -1,10 +1,10 @@
-package com.example.jw_numbers.activity
+package com.example.jwnumbers.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.example.jw_numbers.R
-import com.example.jw_numbers.adapter.HomesAdapter
-import com.example.jw_numbers.viewmodel.HomesViewModel
+import com.example.jwnumbers.R
+import com.example.jwnumbers.adapter.HomesAdapter
+import com.example.jwnumbers.viewmodel.HomesViewModel
 import kotlinx.android.synthetic.main.activity_street.*
 import org.koin.android.ext.android.inject
 

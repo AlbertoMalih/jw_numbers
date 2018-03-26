@@ -1,12 +1,12 @@
-package com.yanevskyy.y.bythewayanalitics.di
+package com.example.jwnumbers.di
 
 import android.preference.PreferenceManager
-import com.example.jw_numbers.model.CitiesContainer
-import com.example.jw_numbers.services.DbManager
-import com.example.jw_numbers.services.NumberRepository
-import com.example.jw_numbers.viewmodel.CitiesViewModel
-import com.example.jw_numbers.viewmodel.HomesViewModel
-import com.example.jw_numbers.viewmodel.SplashViewModel
+import com.example.jwnumbers.model.CitiesContainer
+import com.example.jwnumbers.services.DbManager
+import com.example.jwnumbers.services.NumberRepository
+import com.example.jwnumbers.viewmodel.CitiesViewModel
+import com.example.jwnumbers.viewmodel.HomesViewModel
+import com.example.jwnumbers.viewmodel.SplashViewModel
 import io.realm.Realm
 import org.koin.android.architecture.ext.viewModel
 import org.koin.dsl.module.applicationContext

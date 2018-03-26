@@ -1,7 +1,7 @@
-package com.example.jw_numbers
+package com.example.jwnumbers
 
 import android.support.multidex.MultiDexApplication
-import com.yanevskyy.y.bythewayanalitics.di.jw_numbersModules
+import com.example.jwnumbers.di.jw_numbersModules
 import io.realm.Realm
 import org.koin.android.ext.android.startKoin
 

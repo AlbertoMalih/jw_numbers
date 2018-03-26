@@ -1,12 +1,12 @@
-package com.example.jw_numbers.viewmodel
+package com.example.jwnumbers.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import android.content.SharedPreferences
-import com.example.jw_numbers.activity.OnGetUsersListener
-import com.example.jw_numbers.model.CitiesContainer
-import com.example.jw_numbers.services.DbManager
-import com.example.jw_numbers.services.NumberRepository
-import com.example.jw_numbers.services.OnReceivedNumbers
+import com.example.jwnumbers.activity.OnGetUsersListener
+import com.example.jwnumbers.model.CitiesContainer
+import com.example.jwnumbers.services.DbManager
+import com.example.jwnumbers.services.NumberRepository
+import com.example.jwnumbers.services.OnReceivedNumbers
 import io.realm.Realm
 
 

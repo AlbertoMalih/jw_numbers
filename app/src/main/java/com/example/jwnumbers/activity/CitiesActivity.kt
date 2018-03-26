@@ -1,13 +1,13 @@
-package com.example.jw_numbers.activity
+package com.example.jwnumbers.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.example.jw_numbers.R
-import com.example.jw_numbers.adapter.CitiesAdapter
-import com.example.jw_numbers.viewmodel.CitiesViewModel
+import com.example.jwnumbers.R
+import com.example.jwnumbers.adapter.CitiesAdapter
+import com.example.jwnumbers.viewmodel.CitiesViewModel
 import kotlinx.android.synthetic.main.activity_cities.*
 import org.koin.android.ext.android.inject
 

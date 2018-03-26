@@ -1,8 +1,8 @@
-package com.example.jw_numbers.services
+package com.example.jwnumbers.services
 
-import com.example.jw_numbers.model.CitiesContainer
-import com.example.jw_numbers.model.CityDTO
-import com.example.jw_numbers.model.NumberDTO
+import com.example.jwnumbers.model.CitiesContainer
+import com.example.jwnumbers.model.CityDTO
+import com.example.jwnumbers.model.NumberDTO
 import com.google.firebase.firestore.FirebaseFirestore
 
 const val COLLECTION_STORES = "cities_Homes_Numbers_test_1"

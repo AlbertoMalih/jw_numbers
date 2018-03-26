@@ -1,4 +1,4 @@
-package com.example.jw_numbers.services
+package com.example.jwnumbers.services
 
 import android.content.ContentValues
 import android.content.Context
@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
 import android.preference.PreferenceManager
-import com.example.jw_numbers.activity.OnGetUsersListener
-import com.example.jw_numbers.model.CitiesContainer
-import com.example.jw_numbers.model.NumberDTO
+import com.example.jwnumbers.activity.OnGetUsersListener
+import com.example.jwnumbers.model.CitiesContainer
+import com.example.jwnumbers.model.NumberDTO
 
 const val TABLE_NAME = "numbers"
 private const val COLUMN_ID = "_id"
@@ -46,7 +46,7 @@ class DbManager(context: Context) : SQLiteOpenHelper(context, "NumbersDb.db", nu
         val contentValues = ContentValues()
         contentValues.put(COLUMN_DESCRIPTION, number.description)
 
-        if (1 > db.update(TABLE_NAME, contentValues, "$COLUMN_NUMBER = ? AND $COLUMN_STORE_ID = ?",
+        if (1 > db.update(TABLE_NAME, contentValues, "${COLUMN_NUMBER} = ? AND ${COLUMN_STORE_ID} = ?",
                         arrayOf(number.number, storeId))) {
             contentValues.put(COLUMN_PLACE, number.place)
             contentValues.put(COLUMN_NUMBER, number.number)

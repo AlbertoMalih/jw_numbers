@@ -1,8 +1,8 @@
-package com.example.jw_numbers.viewmodel
+package com.example.jwnumbers.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import android.content.SharedPreferences
-import com.example.jw_numbers.model.CitiesContainer
+import com.example.jwnumbers.model.CitiesContainer
 
 data class CitiesViewModel(val citiesContainer: CitiesContainer, private val preferences: SharedPreferences) : ViewModel() {
 

@@ -1,4 +1,4 @@
-package com.example.jw_numbers.adapter;
+package com.example.jwnumbers.adapter;
 
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import com.example.jw_numbers.R
-import com.example.jw_numbers.activity.CurrentCityActivity
-import com.example.jw_numbers.model.NumberDTO
-import com.example.jw_numbers.viewmodel.HomesViewModel
+import com.example.jwnumbers.R
+import com.example.jwnumbers.activity.CurrentCityActivity
+import com.example.jwnumbers.model.NumberDTO
+import com.example.jwnumbers.viewmodel.HomesViewModel
 
 class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, private val activity: CurrentCityActivity) : RecyclerView.Adapter<HomesAdapter.HomesViewHolder>() {
 

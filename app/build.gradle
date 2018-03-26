@@ -12,7 +12,7 @@ apply plugin: 'realm-android'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.jw_numbers"
+        applicationId "com.example.jwnumbers"
         minSdkVersion 19
         targetSdkVersion 27
         multiDexEnabled true

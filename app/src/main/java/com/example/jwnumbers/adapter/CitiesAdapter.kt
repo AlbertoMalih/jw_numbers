@@ -1,4 +1,4 @@
-package com.example.jw_numbers.adapter;
+package com.example.jwnumbers.adapter;
 
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.jw_numbers.activity.CitiesActivity
-import com.example.jw_numbers.activity.CurrentCityActivity
-import com.example.jw_numbers.R
-import com.example.jw_numbers.model.CitiesContainer
+import com.example.jwnumbers.R
+import com.example.jwnumbers.activity.CitiesActivity
+import com.example.jwnumbers.activity.CurrentCityActivity
+import com.example.jwnumbers.model.CitiesContainer
 
 class CitiesAdapter(private val citiesContainer: CitiesContainer, private val cityNames: List<String>, private val activity: CitiesActivity) : RecyclerView.Adapter<CitiesAdapter.CityViewHolder>() {
 

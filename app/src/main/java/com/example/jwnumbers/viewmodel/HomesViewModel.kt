@@ -1,9 +1,9 @@
-package com.example.jw_numbers.viewmodel
+package com.example.jwnumbers.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import com.example.jw_numbers.model.CitiesContainer
-import com.example.jw_numbers.model.NumberDTO
-import com.example.jw_numbers.services.DbManager
+import com.example.jwnumbers.model.CitiesContainer
+import com.example.jwnumbers.model.NumberDTO
+import com.example.jwnumbers.services.DbManager
 
 class HomesViewModel(val citiesContainer: CitiesContainer, private val dbManager: DbManager) : ViewModel() {
 
