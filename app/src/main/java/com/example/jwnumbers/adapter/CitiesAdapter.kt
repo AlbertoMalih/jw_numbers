@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.jwnumbers.R
 import com.example.jwnumbers.activity.CitiesActivity
-import com.example.jwnumbers.activity.CurrentCityActivity
+import com.example.jwnumbers.activity.HomesActivity
 import com.example.jwnumbers.model.CitiesContainer
 
 class CitiesAdapter(private val citiesContainer: CitiesContainer, private val cityNames: List<String>, private val activity: CitiesActivity) : RecyclerView.Adapter<CitiesAdapter.CityViewHolder>() {
@@ -29,7 +29,7 @@ class CitiesAdapter(private val citiesContainer: CitiesContainer, private val ci
             view.setOnClickListener({ _ ->
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     citiesContainer.currentCity = citiesContainer.cities[adapterPosition]
-                    activity.startActivity(Intent(activity, CurrentCityActivity::class.java))
+                    activity.startActivity(Intent(activity, HomesActivity::class.java))
                 }
             })
         }

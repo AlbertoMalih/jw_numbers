@@ -10,7 +10,7 @@ const val COLLECTION_NUMBERS = "cur_numbers"
 
 class NumberRepository(private val citiesContainer: CitiesContainer) {
 
-    fun installAllUsers(listener: OnReceivedNumbers, storeId: String) {
+    fun installNumbersFromCurrentStore(listener: OnReceivedNumbers, storeId: String) {
         FirebaseFirestore.getInstance().collection(COLLECTION_STORES)
                 .document(storeId).collection(COLLECTION_NUMBERS).get()
                 .addOnSuccessListener { numbersDocuments ->
@@ -19,7 +19,7 @@ class NumberRepository(private val citiesContainer: CitiesContainer) {
                         if (numberDoc.id == "emptyObject") return@InCities
 
                         val currentNumber = numberDoc.toObject(NumberDTO::class.java)
-                        currentNumber.number = numberDoc.id
+                        currentNumber.id = numberDoc.id
 
                         citiesContainer.cities.forEach { currentCity ->
                             if (currentNumber.place == currentCity.name) {
@@ -27,6 +27,7 @@ class NumberRepository(private val citiesContainer: CitiesContainer) {
                                 return@InCities
                             }
                         }
+
                         citiesContainer.cities.add(CityDTO(mutableListOf(currentNumber), currentNumber.place))
                     }
                     listener.onSuchReceived()
@@ -36,5 +37,5 @@ class NumberRepository(private val citiesContainer: CitiesContainer) {
 
 abstract class OnReceivedNumbers {
     abstract fun onSuchReceived()
-    fun onFailReceived() {}
+    open fun onFailReceived() {}
 }

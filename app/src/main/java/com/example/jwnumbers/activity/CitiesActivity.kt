@@ -1,7 +1,7 @@
 package com.example.jwnumbers.activity
 
+import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -11,8 +11,9 @@ import com.example.jwnumbers.viewmodel.CitiesViewModel
 import kotlinx.android.synthetic.main.activity_cities.*
 import org.koin.android.ext.android.inject
 
-class CitiesActivity : AppCompatActivity() {
-    private val viewModel: CitiesViewModel  by inject()
+class CitiesActivity : BaseActivity<CitiesActivityView>(), CitiesActivityView {
+    override val viewModel: CitiesViewModel by inject()
+    override var view: CitiesActivityView = this
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,14 +36,10 @@ class CitiesActivity : AppCompatActivity() {
             R.id.exit_menu_item -> {
                 Toast.makeText(this, this.getString(R.string.exit_info), Toast.LENGTH_LONG).show()
                 viewModel.markStopAutoConnectToRepository()
-                finish()
+                startActivity(Intent(this, SplashActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-//    override fun onBackPressed() {
-//        finishAffinity()
-//    }
 }

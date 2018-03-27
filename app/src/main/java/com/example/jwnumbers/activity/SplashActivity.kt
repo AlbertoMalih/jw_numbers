@@ -4,45 +4,49 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
-import android.preference.PreferenceManager
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.Toast
 import com.example.jwnumbers.R
 import com.example.jwnumbers.services.OnReceivedNumbers
 import com.example.jwnumbers.viewmodel.SplashViewModel
 import kotlinx.android.synthetic.main.activity_splash.*
-import org.koin.android.architecture.ext.viewModel
+import org.koin.android.ext.android.inject
 
 
-class SplashActivity : AppCompatActivity() {
-    private val viewModel: SplashViewModel by viewModel()
-
+class SplashActivity : BaseActivity<SplashActivityView>(), SplashActivityView {
+    override val viewModel: SplashViewModel by inject()
+    override var view: SplashActivityView = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
-        getterStoreId.setText(PreferenceManager.getDefaultSharedPreferences(this).getString("StoreId", ""))
+        viewModel.manageConnect()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isExit", false)) {
-            startLoading()
-            startInstallingUsers(PreferenceManager.getDefaultSharedPreferences(this).getString("StoreId", ""))
-        } else
-            startGetDate.setOnClickListener({
-                startLoading()
-                val text = getterStoreId.text.toString().trim()
-                if (text.isEmpty()) return@setOnClickListener
-                startInstallingUsers(text)
-            })
+    override fun isWillAutoConnect(isWillAutoConnect: Boolean, storeId: String) {
+        getterStoreId.setText(storeId)
+        if (isWillAutoConnect)
+            prepareInstallingNumbers(storeId)
+        else
+            startGetDate.setOnClickListener {
+                getterStoreId.text.toString().trim().let { writtenStoreId -> prepareInstallingNumbers(writtenStoreId) }
+            }
     }
 
-    private fun startInstallingUsers(storeId: String) {
-        viewModel.installAllUsers(object : OnReceivedNumbers() {
+    private fun prepareInstallingNumbers(storeId: String) {
+        if (storeId.isEmpty()) return
+        startLoading()
+        startInstallingNumbers(storeId)
+    }
+
+    private fun startInstallingNumbers(storeId: String) {
+        viewModel.installAllNumbers(object : OnReceivedNumbers() {
+            override fun onFailReceived() {
+                stopLoading()
+                Toast(this@SplashActivity).setText("не удалось загрузить номера")
+            }
+
             override fun onSuchReceived() {
-                PreferenceManager.getDefaultSharedPreferences(this@SplashActivity).edit().putBoolean("isExit", true).apply()
                 stopLoading()
                 startActivity(Intent(this@SplashActivity, CitiesActivity::class.java)
                         .setFlags(FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK))
@@ -59,9 +63,4 @@ class SplashActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         startGetDate.isClickable = false
     }
-}
-
-interface OnGetUsersListener {
-    fun onSuchGetUsers()
-    fun onFailGetUsers()
 }

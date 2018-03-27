@@ -22,7 +22,7 @@
         </activity>
 
         <activity android:name="com.example.jwnumbers.activity.CitiesActivity"/>
-        <activity android:name="com.example.jwnumbers.activity.CurrentCityActivity"/>
+        <activity android:name="com.example.jwnumbers.activity.HomesActivity"/>
     </application>
 
 </manifest>

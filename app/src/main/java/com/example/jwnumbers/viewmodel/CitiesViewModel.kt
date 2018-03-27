@@ -1,12 +1,13 @@
 package com.example.jwnumbers.viewmodel
 
-import android.arch.lifecycle.ViewModel
 import android.content.SharedPreferences
+import com.example.jwnumbers.activity.CitiesActivityView
 import com.example.jwnumbers.model.CitiesContainer
 
-data class CitiesViewModel(val citiesContainer: CitiesContainer, private val preferences: SharedPreferences) : ViewModel() {
+class CitiesViewModel(citiesContainer: CitiesContainer, private val preferences: SharedPreferences)
+    : BaseViewModel<CitiesActivityView>(citiesContainer) {
 
     fun markStopAutoConnectToRepository() {
-        preferences.edit().putBoolean("isExit", false).apply()
+        preferences.edit().putBoolean(WILL_IS_AUTO_CONNECT_TO_STORE_KEY, false).apply()
     }
 }

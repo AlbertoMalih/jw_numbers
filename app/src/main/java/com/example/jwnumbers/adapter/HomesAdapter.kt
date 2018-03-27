@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import com.example.jwnumbers.R
-import com.example.jwnumbers.activity.CurrentCityActivity
+import com.example.jwnumbers.activity.HomesActivity
 import com.example.jwnumbers.model.NumberDTO
 import com.example.jwnumbers.viewmodel.HomesViewModel
 
-class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, private val activity: CurrentCityActivity) : RecyclerView.Adapter<HomesAdapter.HomesViewHolder>() {
+class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, private val activity: HomesActivity) :
+        RecyclerView.Adapter<HomesAdapter.HomesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HomesViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.home_item, parent, false), activity)
@@ -23,14 +24,16 @@ class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, pr
         holder.numberHome.text = currentHome.number
         holder.placeHome.text = currentHome.name
         if (currentHome.description.isNotEmpty()) {
-            holder.descriptionHome.text = if (currentHome.description.length <= 25) currentHome.description else currentHome.description.substring(0, 25) + "..."
+            holder.descriptionHome.text =
+                    if (currentHome.description.length <= 25) currentHome.description else
+                        currentHome.description.substring(0, 25) + "..."
             holder.descriptionHome.visibility = View.VISIBLE
         }
     }
 
     override fun getItemCount() = homes.size
 
-    inner class HomesViewHolder(view: View, private val activity: CurrentCityActivity) : RecyclerView.ViewHolder(view) {
+    inner class HomesViewHolder(view: View, private val activity: HomesActivity) : RecyclerView.ViewHolder(view) {
         var numberHome = view.findViewById<TextView>(R.id.numberHome)
         var placeHome = view.findViewById<TextView>(R.id.placeHome)
         var descriptionHome = view.findViewById<TextView>(R.id.descriptionHome)
