@@ -19,7 +19,7 @@ class RealmDbManager {
 
     fun setDescriptionOfNumber(number: NumberDTO) {
         realm.executeTransaction { realm ->
-            realm.copyToRealm(number)
+            realm.copyToRealmOrUpdate(number)
         }
     }
 
