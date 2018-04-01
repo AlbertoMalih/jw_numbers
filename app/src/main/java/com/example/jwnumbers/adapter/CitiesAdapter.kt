@@ -23,7 +23,7 @@ class CitiesAdapter(private val citiesContainer: CitiesContainer, private val ci
     override fun getItemCount() = cityNames.size
 
     inner class CityViewHolder(view: View, activity: CitiesActivity) : RecyclerView.ViewHolder(view) {
-        var name = view.findViewById<TextView>(R.id.nameCity)
+        var name = view.findViewById<TextView>(R.id.nameCity)!!
 
         init {
             view.setOnClickListener({ _ ->

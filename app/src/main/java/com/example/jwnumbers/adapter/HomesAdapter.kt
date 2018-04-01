@@ -34,9 +34,9 @@ class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, pr
     override fun getItemCount() = homes.size
 
     inner class HomesViewHolder(view: View, private val activity: HomesActivity) : RecyclerView.ViewHolder(view) {
-        var numberHome = view.findViewById<TextView>(R.id.numberHome)
-        var placeHome = view.findViewById<TextView>(R.id.placeHome)
-        var descriptionHome = view.findViewById<TextView>(R.id.descriptionHome)
+        var numberHome = view.findViewById<TextView>(R.id.numberHome)!!
+        var placeHome = view.findViewById<TextView>(R.id.placeHome)!!
+        var descriptionHome = view.findViewById<TextView>(R.id.descriptionHome)!!
 
         init {
             view.setOnClickListener({ _ ->
@@ -45,16 +45,22 @@ class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, pr
                     val dialogView = EditText(activity)
                     dialogView.setText(currentNumber.description)
                     AlertDialog.Builder(activity).setView(dialogView).setPositiveButton("изменить", { _, _ ->
-                        descriptionHome.visibility = if (dialogView.text.isNotEmpty()) View.VISIBLE else View.GONE
-                        currentNumber.description = dialogView.text.toString()
-                        viewModel.setNumberDescriptionToDb(currentNumber)
-                        descriptionHome.paddingLeft.and(20)
-                        descriptionHome.paddingRight.and(20)
-                        descriptionHome.text = if (dialogView.text.toString().length <= 25) dialogView.text.toString() else
-                            dialogView.text.toString().substring(0, 25) + "..."
+                        changeDescription(dialogView, currentNumber)
                     }).create().show()
                 }
             })
+        }
+
+        private fun changeDescription(descriptionsText: EditText, currentNumber: NumberDTO) {
+            currentNumber.description = descriptionsText.text.toString()
+            viewModel.setNumberDescriptionToDb(currentNumber)
+            showDescription(descriptionsText)
+        }
+
+        private fun showDescription(descriptionsText: EditText) {
+            descriptionHome.visibility = if (descriptionsText.text.isNotEmpty()) View.VISIBLE else View.GONE
+            descriptionHome.text = if (descriptionsText.text.toString().length <= 25) descriptionsText.text.toString() else
+                descriptionsText.text.toString().substring(0, 25) + "..."
         }
     }
 }
