@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.example.jwnumbers.R
-import com.example.jwnumbers.services.OnReceivedNumbers
+import com.example.jwnumbers.data.interactor.OnReceivedNumbers
 import com.example.jwnumbers.viewmodel.SplashViewModel
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.koin.android.ext.android.inject
@@ -17,21 +17,24 @@ class SplashActivity : BaseActivity<SplashActivityView>(), SplashActivityView {
     override val viewModel: SplashViewModel by inject()
     override var view: SplashActivityView = this
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         viewModel.manageConnect()
     }
 
-    override fun isWillAutoConnect(isWillAutoConnect: Boolean, storeId: String) {
+    override fun onEnabledAutoConnect(storeId: String) {
         getterStoreId.setText(storeId)
-        if (isWillAutoConnect)
-            prepareInstallingNumbers(storeId)
-        else
-            startGetDate.setOnClickListener {
-                getterStoreId.text.toString().trim().let { writtenStoreId -> prepareInstallingNumbers(writtenStoreId) }
-            }
+        prepareInstallingNumbers(storeId)
     }
+
+    override fun onDisabledAutoConnect() {
+        startGetDate.setOnClickListener {
+            getterStoreId.text.toString().trim().let { writtenStoreId -> prepareInstallingNumbers(writtenStoreId) }
+        }
+    }
+
 
     private fun prepareInstallingNumbers(storeId: String) {
         if (storeId.isEmpty()) return
@@ -43,7 +46,7 @@ class SplashActivity : BaseActivity<SplashActivityView>(), SplashActivityView {
         viewModel.installAllNumbers(object : OnReceivedNumbers() {
             override fun onFailReceived() {
                 stopLoading()
-                Toast(this@SplashActivity).setText("не удалось загрузить номера")
+                Toast.makeText(this@SplashActivity, "не удалось загрузить номера", Toast.LENGTH_SHORT).show()
             }
 
             override fun onSuchReceived() {

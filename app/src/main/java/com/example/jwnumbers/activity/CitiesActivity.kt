@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.example.jwnumbers.R
 import com.example.jwnumbers.adapter.CitiesAdapter
+import com.example.jwnumbers.model.CitiesContainer
 import com.example.jwnumbers.viewmodel.CitiesViewModel
 import kotlinx.android.synthetic.main.activity_cities.*
 import org.koin.android.ext.android.inject
@@ -19,11 +20,11 @@ class CitiesActivity : BaseActivity<CitiesActivityView>(), CitiesActivityView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cities)
+        viewModel.calculateCities()
     }
 
-    override fun onResume() {
-        super.onResume()
-        allCities.adapter = CitiesAdapter(viewModel.citiesContainer, viewModel.citiesContainer.cityNames, this)
+    override fun showCalculatedCities(cities: CitiesContainer) {
+        allCities.adapter = CitiesAdapter(cities, cities.cityNames, this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -35,7 +36,7 @@ class CitiesActivity : BaseActivity<CitiesActivityView>(), CitiesActivityView {
         return when (item.itemId) {
             R.id.exit_menu_item -> {
                 Toast.makeText(this, this.getString(R.string.exit_info), Toast.LENGTH_LONG).show()
-                viewModel.markStopAutoConnectToRepository()
+                viewModel.markDisableAutoConnectToRepository()
                 startActivity(Intent(this, SplashActivity::class.java))
                 true
             }
