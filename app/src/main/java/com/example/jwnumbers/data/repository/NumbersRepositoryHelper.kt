@@ -1,7 +1,7 @@
 package com.example.jwnumbers.data.repository
 
-import com.example.jwnumbers.data.interactor.OnReceivedNumbers
+import io.reactivex.Completable
 
 interface NumbersRepositoryHelper {
-    fun installNumbersFromCurrentStore(listener: OnReceivedNumbers, storeId: String)
+    fun installNumbersFromCurrentStore(storeId: String): Completable
 }

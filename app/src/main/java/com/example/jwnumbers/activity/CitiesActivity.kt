@@ -4,16 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.example.jwnumbers.R
 import com.example.jwnumbers.adapter.CitiesAdapter
 import com.example.jwnumbers.model.CitiesContainer
 import com.example.jwnumbers.viewmodel.CitiesViewModel
 import kotlinx.android.synthetic.main.activity_cities.*
-import org.koin.android.ext.android.inject
+import org.koin.android.architecture.ext.viewModel
 
 class CitiesActivity : BaseActivity<CitiesActivityView>(), CitiesActivityView {
-    override val viewModel: CitiesViewModel by inject()
+    override val viewModel: CitiesViewModel by viewModel()
     override var view: CitiesActivityView = this
 
 
@@ -35,9 +34,9 @@ class CitiesActivity : BaseActivity<CitiesActivityView>(), CitiesActivityView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.exit_menu_item -> {
-                Toast.makeText(this, this.getString(R.string.exit_info), Toast.LENGTH_LONG).show()
                 viewModel.markDisableAutoConnectToRepository()
-                startActivity(Intent(this, SplashActivity::class.java))
+                startActivity(Intent(this, SplashActivity::class.java)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
                 true
             }
             else -> super.onOptionsItemSelected(item)

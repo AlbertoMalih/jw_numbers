@@ -1,14 +1,14 @@
 package com.example.jwnumbers.viewmodel
 
 import com.example.jwnumbers.activity.CitiesActivityView
-import com.example.jwnumbers.data.preferences.PreferencesHelper
+import com.example.jwnumbers.data.interactor.CitiesInteractor
 import com.example.jwnumbers.model.CitiesContainer
 
-class CitiesViewModel(citiesContainer: CitiesContainer, private val preferences: PreferencesHelper)
+class CitiesViewModel(citiesContainer: CitiesContainer, private val interator: CitiesInteractor)
     : BaseViewModel<CitiesActivityView>(citiesContainer) {
 
     fun markDisableAutoConnectToRepository() {
-        preferences.markDisableAutoConnectToStore()
+        interator.doDisableAutoConnectCall()
     }
 
     fun calculateCities() {

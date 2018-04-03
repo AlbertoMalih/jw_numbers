@@ -4,17 +4,9 @@ import com.example.jwnumbers.model.CitiesContainer
 import com.example.jwnumbers.model.NumberDTO
 
 interface DbHelper {
+    fun setDescriptionsFromDb(citiesContainer: CitiesContainer)
 
-    fun setDescriptionsFromDb(citiesContainer: CitiesContainer, listener: OnInsertedDescription)
+    fun setDescriptionToDB(numberDescription: NumberDTO)
 
-    fun setDescriptionOfNumber(number: NumberDTO)
-
-    fun refreshStore()
-
-    fun close()
-}
-
-interface OnInsertedDescription {
-    fun onSuchInserted()
-    fun onFailInserted()
+    fun refreshStore(storeId: String)
 }

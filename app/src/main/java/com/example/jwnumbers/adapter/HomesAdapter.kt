@@ -1,4 +1,4 @@
-package com.example.jwnumbers.adapter;
+package com.example.jwnumbers.adapter
 
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
@@ -11,6 +11,7 @@ import com.example.jwnumbers.R
 import com.example.jwnumbers.activity.HomesActivity
 import com.example.jwnumbers.model.NumberDTO
 import com.example.jwnumbers.viewmodel.HomesViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, private val activity: HomesActivity) :
         RecyclerView.Adapter<HomesAdapter.HomesViewHolder>() {
@@ -53,8 +54,8 @@ class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, pr
 
         private fun changeDescription(descriptionsText: EditText, currentNumber: NumberDTO) {
             currentNumber.description = descriptionsText.text.toString()
-            viewModel.setNumberDescriptionToDb(currentNumber)
-            showDescription(descriptionsText)
+            viewModel.setNumberDescriptionToDb(currentNumber).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ showDescription(descriptionsText) }, {})
         }
 
         private fun showDescription(descriptionsText: EditText) {

@@ -1,12 +1,13 @@
 package com.example.jwnumbers.data.interactor
 
-interface SplashInteractor {
-    fun doReceiveNumbersCall(listener: OnReceivedNumbers, storeId: String)
+import io.reactivex.Completable
 
-    fun doCloseDb()
+interface SplashInteractor {
+    fun doReceiveNumbersCall(storeId: String): Completable
 
     fun isEnabledAutoConnectToStore(): Boolean
 
     fun getStoreId(): String
+
     fun doRefreshDb()
 }
