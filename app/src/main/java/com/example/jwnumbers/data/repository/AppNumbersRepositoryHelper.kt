@@ -30,7 +30,7 @@ class AppNumbersRepositoryHelper(private val citiesContainer: CitiesContainer) :
 
     private fun parseNumber(numberDoc: DocumentSnapshot): NumberDTO {
         val currentNumber = numberDoc.toObject(NumberDTO::class.java)
-        currentNumber.id = numberDoc.id
+        currentNumber.number = numberDoc.id
         return currentNumber
     }
 

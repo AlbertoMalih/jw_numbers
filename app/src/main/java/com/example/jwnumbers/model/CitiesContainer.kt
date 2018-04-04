@@ -12,8 +12,8 @@ data class CitiesContainer(var cities: MutableList<CityDTO> = mutableListOf(), v
         return null
     }
 
-    fun getNumberByCity(cityName: String, id: String): NumberDTO? =
-            cities.firstOrNull { city -> city.name == cityName }?.numbers?.firstOrNull { currentNumber -> currentNumber.id == id }
+    fun getNumberByCity(cityName: String, number: String): NumberDTO? =
+            cities.firstOrNull { city -> city.name == cityName }?.numbers?.firstOrNull { currentNumber -> currentNumber.number == number }
 
     fun clear() {
         cities.clear()

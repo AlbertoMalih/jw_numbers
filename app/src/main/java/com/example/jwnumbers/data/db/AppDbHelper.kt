@@ -23,7 +23,7 @@ class AppDbHelper(appContext: Application) : DbHelper {
     override fun setDescriptionToDB(numberDescription: NumberDTO) {
         descriptionsDatabase.descriptionDao().insertDescription(
                 Description(description = numberDescription.description,
-                        numberPlace = numberDescription.place, numberId = numberDescription.id, storeId = storeId)
+                        numberPlace = numberDescription.place, numberId = numberDescription.number, storeId = storeId)
         )
     }
 
