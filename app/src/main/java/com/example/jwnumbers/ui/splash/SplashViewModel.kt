@@ -11,7 +11,7 @@ import org.koin.standalone.KoinComponent
 class SplashViewModel(citiesContainer: CitiesContainer, private val interactor: SplashInteractor) : BaseViewModel<SplashNavigator>(citiesContainer), KoinComponent {
     var isDisableAutoConnected: MutableLiveData<Boolean> = MutableLiveData()
     var storeId: MutableLiveData<String> = MutableLiveData()
-    var resultLoadedNumbers: MutableLiveData<Boolean> = MutableLiveData()
+    var resultLoadedNumbers: MutableLiveData<Int> = MutableLiveData()
 
 
     fun installAllNumbers(storeId: String) {
@@ -36,5 +36,5 @@ class SplashViewModel(citiesContainer: CitiesContainer, private val interactor: 
     }
 }
 
-const val SUCH_LOADED_NUMBERS = true
-const val FAIL_LOADED_NUMBERS = false
+const val SUCH_LOADED_NUMBERS = 2
+const val FAIL_LOADED_NUMBERS = 3
