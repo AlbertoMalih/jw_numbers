@@ -3,8 +3,8 @@ package com.example.jwnumbers.data.preferences
 import android.content.SharedPreferences
 
 
-const val STORE_ID_KEY = "StoreId"
-const val WILL_IS_AUTO_CONNECT_TO_STORE_KEY = "WILL_IS_AUTO_CONNECT_TO_STORE_KEY"
+private const val STORE_ID_KEY = "StoreId"
+private const val WILL_IS_AUTO_CONNECT_TO_STORE_KEY = "WILL_IS_AUTO_CONNECT_TO_STORE_KEY"
 
 class AppPreferencesHelper(private val preferences: SharedPreferences) : PreferencesHelper {
 
