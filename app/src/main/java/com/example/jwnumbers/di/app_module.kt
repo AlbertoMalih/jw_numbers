@@ -9,9 +9,9 @@ import com.example.jwnumbers.data.preferences.PreferencesHelper
 import com.example.jwnumbers.data.repository.AppNumbersRepositoryHelper
 import com.example.jwnumbers.data.repository.NumbersRepositoryHelper
 import com.example.jwnumbers.model.CitiesContainer
-import com.example.jwnumbers.viewmodel.CitiesViewModel
-import com.example.jwnumbers.viewmodel.HomesViewModel
-import com.example.jwnumbers.viewmodel.SplashViewModel
+import com.example.jwnumbers.ui.cities.CitiesViewModel
+import com.example.jwnumbers.ui.currentCity.CurrentCityViewModel
+import com.example.jwnumbers.ui.splash.SplashViewModel
 import org.koin.android.architecture.ext.viewModel
 import org.koin.dsl.module.applicationContext
 
@@ -29,7 +29,7 @@ val usersModule = applicationContext {
 val viewModelModule = applicationContext {
     viewModel { SplashViewModel(get(), get()) }
     viewModel { CitiesViewModel(get(), get()) }
-    viewModel { HomesViewModel(get(), get()) }
+    viewModel { CurrentCityViewModel(get(), get()) }
 }
 
 val jw_numbersModules = listOf(usersModule, viewModelModule)

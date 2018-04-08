@@ -1,4 +1,4 @@
-package com.example.jwnumbers.adapter
+package com.example.jwnumbers.ui.currentCity
 
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
@@ -8,33 +8,33 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import com.example.jwnumbers.R
-import com.example.jwnumbers.activity.HomesActivity
 import com.example.jwnumbers.model.NumberDTO
-import com.example.jwnumbers.viewmodel.HomesViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, private val activity: HomesActivity) :
-        RecyclerView.Adapter<HomesAdapter.HomesViewHolder>() {
+class CurrentCityAdapter(val viewModel: CurrentCityViewModel, val homes: List<NumberDTO>) :
+        RecyclerView.Adapter<CurrentCityAdapter.HomesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HomesViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.home_item, parent, false), activity)
-
+            LayoutInflater.from(parent.context).inflate(R.layout.home_item, parent, false))
 
     override fun onBindViewHolder(holder: HomesViewHolder, position: Int) {
         val currentHome = homes[position]
         holder.numberHome.text = currentHome.number
         holder.placeHome.text = currentHome.name
         if (currentHome.description.isNotEmpty()) {
-            holder.descriptionHome.text =
-                    if (currentHome.description.length <= 25) currentHome.description else
-                        currentHome.description.substring(0, 25) + "..."
+            holder.descriptionHome.text = getShortDescription(currentHome.description)
             holder.descriptionHome.visibility = View.VISIBLE
         }
     }
 
     override fun getItemCount() = homes.size
 
-    inner class HomesViewHolder(view: View, private val activity: HomesActivity) : RecyclerView.ViewHolder(view) {
+
+    private fun getShortDescription(description: String) =
+            if (description.length <= 25) description else description.substring(0, 25) + "..."
+
+
+    inner class HomesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var numberHome = view.findViewById<TextView>(R.id.numberHome)!!
         var placeHome = view.findViewById<TextView>(R.id.placeHome)!!
         var descriptionHome = view.findViewById<TextView>(R.id.descriptionHome)!!
@@ -43,9 +43,9 @@ class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, pr
             view.setOnClickListener({ _ ->
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     val currentNumber = homes[adapterPosition]
-                    val dialogView = EditText(activity)
+                    val dialogView = EditText(view.context)
                     dialogView.setText(currentNumber.description)
-                    AlertDialog.Builder(activity).setView(dialogView).setPositiveButton("изменить", { _, _ ->
+                    AlertDialog.Builder(view.context).setView(dialogView).setPositiveButton("изменить", { _, _ ->
                         changeDescription(dialogView, currentNumber)
                     }).create().show()
                 }
@@ -60,8 +60,7 @@ class HomesAdapter(val viewModel: HomesViewModel, val homes: List<NumberDTO>, pr
 
         private fun showDescription(descriptionsText: EditText) {
             descriptionHome.visibility = if (descriptionsText.text.isNotEmpty()) View.VISIBLE else View.GONE
-            descriptionHome.text = if (descriptionsText.text.toString().length <= 25) descriptionsText.text.toString() else
-                descriptionsText.text.toString().substring(0, 25) + "..."
+            descriptionHome.text = getShortDescription(descriptionsText.text.toString())
         }
     }
 }

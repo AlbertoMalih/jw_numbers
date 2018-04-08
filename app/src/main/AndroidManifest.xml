@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.jwnumbers.activity.SplashActivity">
+        <activity android:name="com.example.jwnumbers.ui.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.jwnumbers.activity.CitiesActivity"/>
-        <activity android:name="com.example.jwnumbers.activity.HomesActivity"/>
+        <activity android:name="com.example.jwnumbers.ui.cities.CitiesActivity"/>
+        <activity android:name="com.example.jwnumbers.ui.currentCity.CurrentCityActivity"/>
     </application>
 
 </manifest>
