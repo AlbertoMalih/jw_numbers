@@ -20,9 +20,7 @@ val usersModule = applicationContext {
     bean { AppDbHelper(get()) as DbHelper }
     bean { AppNumbersRepositoryHelper(get()) as NumbersRepositoryHelper }
     bean { AppPreferencesHelper(get()) as PreferencesHelper }
-    bean { SplashAppInteractor(get(), get(), get(), get()) as SplashInteractor }
-    bean { CitiesAppInteractor(get()) as CitiesInteractor }
-    bean { HomesAppInteractor(get()) as HomesInteractor }
+    bean { DataAppInteractor(get(), get(), get(), get()) as DataInteractor }
     bean { PreferenceManager.getDefaultSharedPreferences(get()) }
 }
 

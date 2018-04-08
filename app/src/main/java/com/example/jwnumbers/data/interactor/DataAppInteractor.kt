@@ -5,12 +5,21 @@ import com.example.jwnumbers.data.preferences.PreferencesHelper
 import com.example.jwnumbers.data.repository.EmptyStoreException
 import com.example.jwnumbers.data.repository.NumbersRepositoryHelper
 import com.example.jwnumbers.model.CitiesContainer
+import com.example.jwnumbers.model.NumberDTO
 import io.reactivex.Completable
 import io.reactivex.CompletableEmitter
 import io.reactivex.schedulers.Schedulers
 
-class SplashAppInteractor(private val numbersRepositoryHelper: NumbersRepositoryHelper, private val preferencesHelper: PreferencesHelper,
-                          private val dbHelper: DbHelper, private val citiesContainer: CitiesContainer) : SplashInteractor {
+class DataAppInteractor(private val numbersRepositoryHelper: NumbersRepositoryHelper, private val preferencesHelper: PreferencesHelper,
+                        private val dbHelper: DbHelper, private val citiesContainer: CitiesContainer): DataInteractor {
+
+    override fun doDisableAutoConnectCall() {
+        preferencesHelper.markDisableAutoConnectToStore()
+    }
+
+    override fun doWriteDescriptionIntoDbCall(number: NumberDTO) {
+        dbHelper.setDescriptionToDB(number)
+    }
 
     override fun doRefreshDb() {
         dbHelper.refreshStore(preferencesHelper.getStoreId())

@@ -1,14 +1,14 @@
 package com.example.jwnumbers.ui.splash
 
 import android.arch.lifecycle.MutableLiveData
-import com.example.jwnumbers.data.interactor.SplashInteractor
+import com.example.jwnumbers.data.interactor.DataInteractor
 import com.example.jwnumbers.model.CitiesContainer
 import com.example.jwnumbers.ui.base.BaseViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.koin.standalone.KoinComponent
 
-class SplashViewModel(citiesContainer: CitiesContainer, private val interactor: SplashInteractor) : BaseViewModel<SplashNavigator>(citiesContainer), KoinComponent {
+class SplashViewModel(citiesContainer: CitiesContainer, private val interactor: DataInteractor) : BaseViewModel<SplashNavigator>(citiesContainer), KoinComponent {
     var isDisableAutoConnected: MutableLiveData<Boolean> = MutableLiveData()
     var storeId: MutableLiveData<String> = MutableLiveData()
     var resultLoadedNumbers: MutableLiveData<Int> = MutableLiveData()
